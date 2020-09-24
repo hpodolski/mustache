@@ -508,6 +508,18 @@ Outer:
 				v = av.Elem()
 			case reflect.Interface:
 				v = av.Elem()
+			case reflect.Array:
+				fallthrough
+			case reflect.Slice:
+				index, err := strconv.Atoi(name)
+				if err != nil {
+					continue Outer
+				}
+				ret := av.Index(index)
+				if ret.IsValid() {
+					return ret, nil
+				}
+				continue Outer
 			case reflect.Struct:
 				ret := av.FieldByName(name)
 				if ret.IsValid() {
